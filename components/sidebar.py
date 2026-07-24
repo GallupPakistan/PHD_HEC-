@@ -6,17 +6,16 @@ navigation buttons with icons, a divider, a theme toggle, and a footer.
 
 import streamlit as st
 
+from utils.loader import get_last_updated
+
 NAV_ITEMS = [
     ("Overview", "dashboard"),
     ("Universities", "school"),
-    ("Disciplines", "category"),
-    ("Subjects", "menu_book"),
-    ("Years", "calendar_month"),
+    ("PhD Directory", "workspace_premium"),
     ("Analytics", "insights"),
     ("Data Explorer", "table_view"),
     ("About", "info"),
 ]
-
 
 def render_sidebar() -> str:
     """Renders the sidebar and returns the currently selected page name."""
@@ -27,14 +26,14 @@ def render_sidebar() -> str:
     with st.sidebar:
         st.markdown(
             """
-            <div style="display:flex;align-items:center;gap:10px;padding:0.4rem 0 1rem 0;">
+            <div style="display:flex;align-items:center;gap:10px;padding:0.4rem 0.2rem 1rem 0;">
                 <div style="width:36px;height:36px;border-radius:8px;background-color:rgba(255,255,255,0.14);
                             display:flex;align-items:center;justify-content:center;">
                     <span class="material-symbols-outlined" style="font-size:20px;">account_balance</span>
                 </div>
                 <div>
-                    <div style="font-weight:700;font-size:0.95rem;line-height:1.1;">HEC Analytics</div>
-                    <div style="font-size:0.72rem;opacity:0.7;">PhD Records Dashboard</div>
+                    <div style="font-weight:700;font-size:0.95rem;line-height:1.1;">HEI's Analytics Dashboard</div>
+                    <div style="font-size:0.72rem;opacity:0.7;"></div>
                 </div>
             </div>
             """,

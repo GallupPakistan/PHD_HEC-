@@ -1,6 +1,6 @@
 """
 styles.py
-Central style configuration for the HEC Analytics Dashboard.
+Central style configuration for the HEI'sS Analytics Dashboard.
 Holds the color palette and the global CSS injected into every page.
 
 NOTE: This version deliberately avoids touching header/toolbar
@@ -50,11 +50,7 @@ FONT_FAMILY = (
 
 def inject_global_css() -> None:
     """Injects the global CSS used to re-skin Streamlit into an enterprise
-    BI look and feel. Call once, at the very top of app.py.
-
-    Intentionally does NOT hide header/toolbar/decoration and does NOT
-    force display/visibility on the sidebar — those overrides broke the
-    sidebar's collapse/expand behavior on Streamlit 1.60."""
+    BI look and feel. Call once, at the very top of app.py."""
 
     st.markdown(
         f"""
@@ -70,14 +66,28 @@ def inject_global_css() -> None:
             background-color: {COLORS['background']};
         }}
 
-        /* Safe to hide: these never affect sidebar layout */
         #MainMenu {{visibility: hidden;}}
+        div[data-testid="stToolbar"] {{
+            display: none !important;
+        }}
+        header {{
+            height: 0 !important;
+            min-height: 0 !important;
+        }}
         footer {{visibility: hidden;}}
 
-        /* Sidebar cosmetic styling only — no display/visibility overrides */
+        /* ---------- Sidebar ---------- */
         section[data-testid="stSidebar"] {{
             background-color: {COLORS['primary']};
-            border-right: 1px solid {COLORS['border']};
+            border-right: none;
+            border-radius: 14px;
+            margin: 0.7rem 0 0.7rem 0.7rem;
+            box-shadow: 0 6px 16px rgba(11, 58, 117, 0.22);
+            width: 15.5rem !important;
+            min-width: 15.5rem;
+        }}
+        section[data-testid="stSidebar"] > div {{
+            border-radius: 14px;
         }}
         section[data-testid="stSidebar"] * {{
             color: #FFFFFF !important;
@@ -88,11 +98,11 @@ def inject_global_css() -> None:
             background-color: transparent;
             border: none;
             color: #E8EEF5 !important;
-            padding: 0.55rem 0.9rem;
+            padding: 0.55rem 0.3rem;
             border-radius: 6px;
             font-weight: 500;
             font-size: 0.92rem;
-            margin-bottom: 2px;
+            margin-bottom: 1px;
             transition: background-color 0.15s ease;
         }}
         section[data-testid="stSidebar"] .stButton button:hover {{
@@ -107,16 +117,36 @@ def inject_global_css() -> None:
             border-left: 3px solid {COLORS['accent']} !important;
         }}
 
-        /* Remove default block padding for tighter control */
+        section[data-testid="stSidebar"] *::-webkit-scrollbar {{
+            width: 8px;
+            height: 8px;
+        }}
+        section[data-testid="stSidebar"] *::-webkit-scrollbar-track {{
+            background: rgba(255,255,255,0.08);
+            border-radius: 8px;
+        }}
+        section[data-testid="stSidebar"] *::-webkit-scrollbar-thumb {{
+            background-color: rgba(255,255,255,0.55);
+            border-radius: 8px;
+            border: 2px solid transparent;
+            background-clip: padding-box;
+        }}
+        section[data-testid="stSidebar"] *::-webkit-scrollbar-thumb:hover {{
+            background-color: rgba(255,255,255,0.75);
+        }}
+        section[data-testid="stSidebar"] * {{
+            scrollbar-width: thin;
+            scrollbar-color: rgba(255,255,255,0.55) rgba(255,255,255,0.08);
+        }}
+
         .block-container {{
-            padding-top: 1.4rem;
+            padding-top: 0.6rem;
             padding-bottom: 2rem;
             padding-left: 2.2rem;
             padding-right: 2.2rem;
             max-width: 1500px;
         }}
 
-        /* Card component */
         .bi-card {{
             background-color: {COLORS['card']};
             border: 1px solid {COLORS['border']};
@@ -207,18 +237,64 @@ def inject_global_css() -> None:
             margin: 0.9rem 0;
         }}
 
-        /* Dataframe polish (fallback tables) */
         div[data-testid="stDataFrame"] {{
             border: 1px solid {COLORS['border']};
             border-radius: 8px;
         }}
 
-        /* Metrics tweak (not primary KPI style but used incidentally) */
         div[data-testid="stMetric"] {{
             background-color: {COLORS['card']};
             border: 1px solid {COLORS['border']};
             border-radius: 10px;
             padding: 0.8rem;
+        }}
+
+        /* ---------- Top bar (full page header) ---------- */
+        .hec-topbar {{
+            position: relative;
+            background-color: {COLORS['primary']} !important;
+            border-radius: 14px;
+            padding: 1.3rem 1.6rem;
+            margin: 0 0 1.4rem 0;
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 1.5rem;
+            box-shadow: 0 6px 16px rgba(11, 58, 117, 0.22);
+        }}
+        .hec-topbar-left {{ display: flex; flex-direction: column; gap: 0.25rem; }}
+        .hec-topbar-crumbs {{
+            display: flex; align-items: center; gap: 0.35rem;
+            font-size: 0.76rem; color: rgba(255,255,255,0.6); white-space: nowrap;
+        }}
+        .hec-topbar-current {{ color: #FFFFFF; font-weight: 700; }}
+        .hec-topbar-sep {{ font-size: 14px; color: rgba(255,255,255,0.4); }}
+        .hec-topbar-title {{
+            font-size: 1.5rem; font-weight: 800; color: #FFFFFF; margin-top: 0.3rem;
+        }}
+        .hec-topbar-subtitle {{
+            font-size: 0.86rem; color: rgba(255,255,255,0.8); max-width: 640px; margin-top: 0.1rem;
+        }}
+        .hec-topbar-lastupdated-inline {{
+            font-size: 0.72rem; color: rgba(255,255,255,0.55); margin-top: 0.35rem;
+        }}
+        .hec-topbar-right {{ display: flex; align-items: center; padding-top: 0.3rem; }}
+        .hec-topbar-stat {{
+            text-align: right;
+            background-color: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            padding: 0.6rem 1.1rem;
+        }}
+        .hec-topbar-stat-value {{
+            font-size: 1.5rem; font-weight: 800; color: #FFFFFF; line-height: 1.1;
+        }}
+        .hec-topbar-stat-label {{
+            font-size: 0.7rem; color: rgba(255,255,255,0.7); margin-top: 0.15rem;
+            text-transform: uppercase; letter-spacing: 0.03em;
+        }}
+
+        @media (max-width: 900px) {{
+            .hec-topbar-center {{ display: none; }}
         }}
         </style>
         """,

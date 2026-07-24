@@ -44,14 +44,12 @@ def horizontal_bar(df: pd.DataFrame, x: str, y: str, top_n: int = 5, color: str 
     if df.empty:
         return _base_layout(go.Figure())
 
-    # Sort & pick top N
     plot_df = df.dropna(subset=[x, y]).sort_values(by=x, ascending=False).head(top_n).copy()
 
     total_val = plot_df[x].sum() if plot_df[x].sum() > 0 else 1
     plot_df["pct"] = (plot_df[x] / total_val) * 100
     plot_df["display_text"] = plot_df.apply(lambda r: f" {r[x]:,.0f} ({r['pct']:.1f}%)", axis=1)
 
-    # Sort ascending for horizontal bar rendering order
     plot_df = plot_df.sort_values(by=x, ascending=True)
 
     fig = px.bar(
@@ -67,13 +65,11 @@ def horizontal_bar(df: pd.DataFrame, x: str, y: str, top_n: int = 5, color: str 
         textposition="outside",
         textfont=dict(size=11, color=COLORS["text"]),
         marker_line_width=0,
-        # Clean custom tooltip
         hovertemplate="<b>%{y}</b><br>Count: %{x:,.0f}<extra></extra>",
     )
 
     fig = _base_layout(fig)
 
-    # Auto-expand X-axis range by 30% so outside labels NEVER clip/cut off
     max_val = plot_df[x].max() if not plot_df.empty else 100
     fig.update_xaxes(range=[0, max_val * 1.30], title=None)
     fig.update_yaxes(title=None)
@@ -186,6 +182,44 @@ def area_chart(df: pd.DataFrame, x: str, y: str) -> go.Figure:
     fig.update_yaxes(title=None)
     return fig
 
+def dual_line_chart(df: pd.DataFrame, x: str, y1: str, y2: str, name1: str, name2: str,
+                     milestone_year: int = None, milestone_label: str = None) -> go.Figure:
+    """Two-line trend chart matching the HEC reference style."""
+
+    fig = go.Figure()
+    fig.add_trace(go.Scatter(
+        x=df[x], y=df[y1], mode="lines+markers+text", name=name1,
+        line=dict(color=COLORS["success"], width=2.5), marker=dict(size=5),
+        text=df[y1].astype(int).astype(str), textposition="top center",
+        textfont=dict(size=9, color=COLORS["success"]),
+        hovertemplate=f"{name1}: %{{y}}<extra></extra>",
+    ))
+    fig.add_trace(go.Scatter(
+        x=df[x], y=df[y2], mode="lines+markers+text", name=name2,
+        line=dict(color=COLORS["primary"], width=2.5), marker=dict(size=5),
+        text=df[y2].astype(int).astype(str), textposition="bottom center",
+        textfont=dict(size=9, color=COLORS["primary"]),
+        hovertemplate=f"{name2}: %{{y}}<extra></extra>",
+    ))
+
+    if milestone_year is not None:
+        fig.add_vline(x=milestone_year, line_width=2, line_dash="dash", line_color="orange")
+        fig.add_annotation(
+            x=milestone_year, y=0, yref="paper", yanchor="bottom",
+            text=milestone_label or f"Established in: {milestone_year}",
+            showarrow=False, font=dict(size=11, color="orange"), xshift=6, align="left",
+        )
+
+    fig = _base_layout(fig, show_legend=True)
+    fig.update_layout(
+        hovermode="x unified",
+        hoverlabel=dict(namelength=-1, font_size=11),
+        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="center", x=0.5),
+        margin=dict(l=10, r=15, t=25, b=40),
+    )
+    fig.update_xaxes(title=None)
+    fig.update_yaxes(title=None)
+    return fig
 
 def treemap_chart(df: pd.DataFrame, path: str, values: str, top_n: int = 12) -> go.Figure:
     """
@@ -289,4 +323,57 @@ def lollipop_chart(df: pd.DataFrame, x: str, y: str, top_n: int = 10) -> go.Figu
     fig.update_layout(showlegend=False)
     fig.update_xaxes(title=None)
     fig.update_yaxes(title=None)
+    return fig
+
+
+def university_map(df: pd.DataFrame) -> go.Figure:
+    """
+    City-level map of HEI locations, colored by Sector (Public / Private)
+    and sized by how many institutions sit in that city — matching the
+    reference dashboard's style of variable bubble sizes. Uses
+    scatter_geo — no Mapbox token or internet-hosted tiles required,
+    scoped to Pakistan. Expects columns: City, Sector, Province,
+    Latitude, Longitude, Count.
+    """
+    if df.empty:
+        return _base_layout(go.Figure())
+
+    sector_colors = {"Public": COLORS["accent"], "Private": COLORS["primary"]}
+
+    fig = px.scatter_geo(
+        df,
+        lat="Latitude",
+        lon="Longitude",
+        color="Sector",
+        size="Count",
+        size_max=34,
+        color_discrete_map=sector_colors,
+        hover_name="City",
+        hover_data={"Province": True, "Sector": True, "Count": True, "Latitude": False, "Longitude": False},
+        scope="asia",
+    )
+    fig.update_traces(marker=dict(opacity=0.85, line=dict(width=1.2, color=COLORS.get("card", "#FFFFFF"))))
+    fig.update_geos(
+        lataxis_range=[22, 38],
+        lonaxis_range=[60, 78],
+        showcountries=True,
+        countrycolor=COLORS["primary"],
+        countrywidth=2.2,
+        showland=True,
+        landcolor=COLORS["background"],
+        showocean=True,
+        oceancolor="#DCE9F5",
+        showlakes=False,
+        showsubunits=True,
+        subunitcolor=COLORS["secondary"],
+        subunitwidth=1,
+        showframe=True,
+        framecolor=COLORS["primary"],
+        bgcolor="rgba(0,0,0,0)",
+    )
+    fig = _base_layout(fig, show_legend=True)
+    fig.update_layout(
+        height=480,
+        legend=dict(orientation="h", yanchor="bottom", y=1.0, xanchor="right", x=1, title=None),
+    )
     return fig

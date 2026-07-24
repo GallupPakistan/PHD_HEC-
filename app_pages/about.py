@@ -14,12 +14,7 @@ def render(data: dict) -> None:
     university = data["university"]
     total_records = int(university["Records"].sum())
 
-    render_page_header(
-        title="About",
-        subtitle="Information about this dashboard, the underlying dataset, and the technology stack.",
-        breadcrumb="Home / About",
-        last_updated=get_last_updated(),
-    )
+   
 
     col1, col2 = st.columns(2)
     with col1:

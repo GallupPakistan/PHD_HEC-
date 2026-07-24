@@ -19,12 +19,7 @@ def render(data: dict) -> None:
     subject = data["subject"]
     year = data["year"]
 
-    render_page_header(
-        title="Analytics",
-        subtitle="A consolidated analytical view — top rankings, trend, and distribution — for quick understanding of the full dataset.",
-        breadcrumb="Home / Analytics",
-        last_updated=get_last_updated(),
-    )
+   
 
     total_records = int(university["Records"].sum())
     yoy_growth = 0.0
@@ -43,8 +38,9 @@ def render(data: dict) -> None:
     ]
     render_kpi_row(kpis)
 
+    # Row 1 — two charts
     st.write("")
-    col1, col2, col3 = st.columns(3)
+    col1, col2 = st.columns(2)
     with col1:
         section_card_start("Top Universities")
         charts.render(charts.horizontal_bar(university, x="Records", y="University", top_n=8))
@@ -53,21 +49,24 @@ def render(data: dict) -> None:
         section_card_start("Top Subjects")
         charts.render(charts.horizontal_bar(subject, x="Records", y="Subject", top_n=8))
         section_card_end()
+
+    # Row 2 — two charts
+    st.write("")
+    col3, col4 = st.columns(2)
     with col3:
         section_card_start("Top Disciplines")
         charts.render(charts.horizontal_bar(discipline, x="Records", y="Discipline", top_n=8))
         section_card_end()
-
-    st.write("")
-    col4, col5 = st.columns(2)
     with col4:
-        section_card_start("Trend Analysis — Records Over Years")
-        charts.render(charts.line_chart(year, x="Year", y="Records"))
-        section_card_end()
-    with col5:
         section_card_start("Distribution Analysis — Disciplines")
-        charts.render(charts.donut_chart(discipline, names="Discipline", values="Records", top_n=8))
+        charts.render(charts.donut_chart(discipline, names="Discipline", values="Records", top_n=len(discipline)))
         section_card_end()
+
+    # Row 3 — single full-width line chart
+    st.write("")
+    section_card_start("Trend Analysis — Records Over Years")
+    charts.render(charts.line_chart(year, x="Year", y="Records"))
+    section_card_end()
 
     st.write("")
     render_insights_panel("Summary Insights", compute_overview_insights(data))

@@ -15,12 +15,7 @@ from utils.loader import get_last_updated
 
 
 def render(data: dict) -> None:
-    render_page_header(
-        title="Data Explorer",
-        subtitle="Explore the underlying datasets directly with full search, filter, and export capability.",
-        breadcrumb="Home / Data Explorer",
-        last_updated=get_last_updated(),
-    )
+    
 
     dataset_name = st.selectbox(
         "Select dataset",
