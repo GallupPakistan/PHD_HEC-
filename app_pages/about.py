@@ -21,7 +21,7 @@ def render(data: dict) -> None:
         section_card_start("Dataset Information")
         st.markdown(
             f"""
-            <div class="insight-item"><span class="insight-label">Source File</span><span class="insight-value">Dashboard_Data.xlsx</span></div>
+            <div class="insight-item"><span class="insight-label">Source File</span><span class="insight-value">HEC Annual Reports</span></div>
             <div class="insight-item"><span class="insight-label">Sheets</span><span class="insight-value">University, Discipline, Subject, Year</span></div>
             <div class="insight-item"><span class="insight-label">Total Records</span><span class="insight-value">{total_records:,}</span></div>
             <div class="insight-item"><span class="insight-label">Refresh Date</span><span class="insight-value">{get_last_updated()}</span></div>
@@ -37,7 +37,6 @@ def render(data: dict) -> None:
             <div class="insight-item"><span class="insight-label">Charting</span><span class="insight-value">Plotly</span></div>
             <div class="insight-item"><span class="insight-label">Tables</span><span class="insight-value">streamlit-aggrid (AgGrid)</span></div>
             <div class="insight-item"><span class="insight-label">Data Processing</span><span class="insight-value">pandas, openpyxl</span></div>
-            <div class="insight-item"><span class="insight-label">Version</span><span class="insight-value">1.0.0</span></div>
             """,
             unsafe_allow_html=True,
         )

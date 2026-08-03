@@ -112,9 +112,13 @@ def inject_global_css() -> None:
         section[data-testid="stSidebar"] .stButton button:focus {{
             box-shadow: none !important;
         }}
-        .nav-active button {{
-            background-color: rgba(255,255,255,0.16) !important;
-            border-left: 3px solid {COLORS['accent']} !important;
+        .nav-section-label {{
+            font-size: 0.68rem;
+            font-weight: 700;
+            color: rgba(255,255,255,0.45) !important;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            margin: 0.9rem 0 0.25rem 0.4rem;
         }}
 
         section[data-testid="stSidebar"] *::-webkit-scrollbar {{
@@ -249,48 +253,231 @@ def inject_global_css() -> None:
             padding: 0.8rem;
         }}
 
-        /* ---------- Top bar (full page header) ---------- */
+       /* ---------- Top bar (full page header) ---------- */
         .hec-topbar {{
             position: relative;
+            overflow: hidden;
             background-color: {COLORS['primary']} !important;
-            border-radius: 14px;
-            padding: 1.3rem 1.6rem;
+            border-radius: 12px;
+            padding: 1.5rem 2rem;
             margin: 0 0 1.4rem 0;
+            box-shadow: 0 10px 24px rgba(0, 0, 0, 0.2);
+            color: #FFFFFF;
+        }}
+
+        /* faint giant building icon watermark */
+        .hec-topbar-watermark {{
+            position: absolute;
+            top: -2rem;
+            right: 30%; /* Shifted closer to the center like the image */
+            opacity: 0.05;
+            pointer-events: none;
+        }}
+        .hec-topbar-watermark .material-symbols-outlined {{
+            font-size: 18rem;
+            color: #FFFFFF;
+        }}
+
+        /* dotted pattern, top right corner */
+        .hec-topbar-dots {{
+            position: absolute;
+            top: 1.3rem;
+            right: 1.6rem;
+            width: 120px;
+            height: 80px;
+            background-image: radial-gradient(rgba(255,255,255,0.2) 1.5px, transparent 1.5px);
+            background-size: 12px 12px;
+            pointer-events: none;
+        }}
+
+        /* ---- top row: brand (logo + name) on the left, breadcrumb ---- */
+        .hec-topbar-toprow {{
+            position: relative;
             display: flex;
-            align-items: flex-start;
+            align-items: center;
+            justify-content: flex-start; /* Aligns items to the left */
+            margin-bottom: 2rem;
+        }}
+        .hec-topbar-brand {{
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }}
+        .hec-topbar-logo-circle {{
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background-color: rgba(255,255,255,0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid rgba(255,255,255,0.15);
+        }}
+        .hec-topbar-logo-circle .material-symbols-outlined {{
+            font-size: 24px;
+            color: #FFFFFF;
+        }}
+        .hec-topbar-brand-text {{
+            display: flex;
+            flex-direction: column;
+            line-height: 1.2;
+        }}
+        .hec-topbar-brand-name {{
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #FFFFFF;
+            letter-spacing: 0.02em;
+        }}
+        .hec-topbar-brand-sub {{
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: #79AFFF; /* Lighter blue to match image */
+        }}
+
+        /* Separator between Brand and Breadcrumbs */
+        .hec-topbar-vsep {{
+            width: 1px;
+            height: 32px;
+            background-color: rgba(255,255,255,0.15);
+            margin: 0 1.5rem;
+        }}
+
+        .hec-topbar-crumbs {{
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            font-size: 0.85rem;
+            color: rgba(255,255,255,0.7);
+            white-space: nowrap;
+        }}
+        .hec-topbar-crumb-icon-badge {{
+            width: 30px;
+            height: 30px;
+            border-radius: 8px;
+            background-color: rgba(0, 0, 0, 0.25); /* Dark recessed badge */
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.3);
+        }}
+        .hec-topbar-crumb-icon-badge .material-symbols-outlined {{
+            font-size: 16px;
+            color: #FFFFFF;
+        }}
+        .hec-topbar-sep {{ color: rgba(255,255,255,0.35); margin: 0 0.2rem; }}
+        .hec-topbar-crumb {{ color: rgba(255,255,255,0.8); }}
+        .hec-topbar-current {{ color: #FFFFFF; font-weight: 600; }}
+
+        /* ---- bottom row: title/subtitle/last-updated on the left, stat card on the right ---- */
+        .hec-topbar-bottomrow {{
+            position: relative;
+            display: flex;
+            align-items: flex-end;
             justify-content: space-between;
             gap: 1.5rem;
-            box-shadow: 0 6px 16px rgba(11, 58, 117, 0.22);
         }}
-        .hec-topbar-left {{ display: flex; flex-direction: column; gap: 0.25rem; }}
-        .hec-topbar-crumbs {{
-            display: flex; align-items: center; gap: 0.35rem;
-            font-size: 0.76rem; color: rgba(255,255,255,0.6); white-space: nowrap;
+        .hec-topbar-left {{ display: flex; flex-direction: column; gap: 0.6rem; max-width: 650px; }}
+
+        .hec-topbar-title-wrapper {{
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
         }}
-        .hec-topbar-current {{ color: #FFFFFF; font-weight: 700; }}
-        .hec-topbar-sep {{ font-size: 14px; color: rgba(255,255,255,0.4); }}
+        .hec-topbar-accent-bar {{
+            width: 4px;
+            height: 2rem;
+            border-radius: 4px;
+            background-color: #3b82f6; /* Bright blue accent line */
+        }}
         .hec-topbar-title {{
-            font-size: 1.5rem; font-weight: 800; color: #FFFFFF; margin-top: 0.3rem;
+            font-size: 2rem;
+            font-weight: 700;
+            color: #FFFFFF;
+            line-height: 1;
+            letter-spacing: -0.01em;
         }}
         .hec-topbar-subtitle {{
-            font-size: 0.86rem; color: rgba(255,255,255,0.8); max-width: 640px; margin-top: 0.1rem;
+            font-size: 0.9rem;
+            color: rgba(255,255,255,0.75);
+            line-height: 1.5;
+            margin-bottom: 0.3rem;
         }}
-        .hec-topbar-lastupdated-inline {{
-            font-size: 0.72rem; color: rgba(255,255,255,0.55); margin-top: 0.35rem;
+        .hec-topbar-lastupdated-pill {{
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background-color: rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 8px;
+            padding: 0.4rem 0.8rem;
+            font-size: 0.8rem;
+            color: rgba(255,255,255,0.7);
+            width: fit-content;
         }}
-        .hec-topbar-right {{ display: flex; align-items: center; padding-top: 0.3rem; }}
+        .hec-topbar-lastupdated-pill .material-symbols-outlined {{
+            font-size: 16px;
+            color: #79AFFF;
+        }}
+        .hec-topbar-lastupdated-pill b {{ color: #FFFFFF; font-weight: 600; }}
+
+        /* Custom Stat Card Configuration */
+        .hec-topbar-right {{ display: flex; align-items: center; }}
         .hec-topbar-stat {{
-            text-align: right;
-            background-color: rgba(255,255,255,0.1);
-            border-radius: 10px;
-            padding: 0.6rem 1.1rem;
+            display: flex;
+            align-items: center;
+            background: linear-gradient(135deg, rgba(255,255,255,0.12), rgba(255,255,255,0.03));
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 12px;
+            padding: 1rem 1.5rem;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+            backdrop-filter: blur(10px);
+        }}
+        .hec-topbar-stat-icon-circle {{
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            background-color: #0F4C9D; /* Bright blue background for the icon */
+            border: 2px solid #1A60BC;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }}
+        .hec-topbar-stat-icon-circle .material-symbols-outlined {{
+            font-size: 28px;
+            color: #FFFFFF;
+        }}
+        .hec-topbar-stat-vsep {{
+            width: 1px;
+            height: 44px;
+            background-color: rgba(255,255,255,0.15);
+            margin: 0 1.5rem;
+        }}
+        .hec-topbar-stat-text {{
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
         }}
         .hec-topbar-stat-value {{
-            font-size: 1.5rem; font-weight: 800; color: #FFFFFF; line-height: 1.1;
+            font-size: 2rem;
+            font-weight: 800;
+            color: #FFFFFF;
+            line-height: 1;
+            letter-spacing: -0.02em;
         }}
         .hec-topbar-stat-label {{
-            font-size: 0.7rem; color: rgba(255,255,255,0.7); margin-top: 0.15rem;
-            text-transform: uppercase; letter-spacing: 0.03em;
+            font-size: 0.65rem;
+            font-weight: 600;
+            color: rgba(255,255,255,0.7);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-top: 0.3rem;
+        }}
+
+        @media (max-width: 900px) {{
+            .hec-topbar-watermark {{ display: none; }}
+            .hec-topbar-bottomrow {{ flex-direction: column; align-items: flex-start; }}
+            .hec-topbar-stat {{ width: 100%; justify-content: flex-start; }}
         }}
 
         @media (max-width: 900px) {{
