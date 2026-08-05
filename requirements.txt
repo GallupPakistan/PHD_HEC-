@@ -1,5 +1,5 @@
 streamlit>=1.30.0,<1.40.0
-starlette==0.41.3
+starlette==0.37.2
 pandas>=2.2.0
 openpyxl>=3.1.0
 plotly>=5.22.0
