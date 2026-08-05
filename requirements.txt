@@ -1,5 +1,7 @@
-streamlit>=1.56.0
+streamlit>=1.30.0,<1.40.0
+starlette==0.41.3
 pandas>=2.2.0
 openpyxl>=3.1.0
 plotly>=5.22.0
 streamlit-aggrid>=1.0.5
+this is my reqiuirment.txt
